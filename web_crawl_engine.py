@@ -67,6 +67,7 @@ def add_page_to_index(index, url, content):
     words = content.split()
     for word in words:
         add_to_index(index, word, url)
+        
 
 def compute_ranks(graph):
     d = 0.8 # damping factor
@@ -85,3 +86,14 @@ def compute_ranks(graph):
             newranks[page] = newrank
         ranks = newranks
     return ranks
+
+
+def lucky_search(index, ranks, keyword):
+    pages=lookup(index,keyword)
+    if not pages:
+        return None
+    best_page =pages[0]
+    for c in pages:
+        if ranks[c] >ranks[best_page]:
+            best_page = c
+    return best_page
