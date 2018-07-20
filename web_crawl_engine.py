@@ -35,19 +35,21 @@ def get_all_links(page):
             break
     return links
 
-def crawl_web(seed, max_pages):
+def crawl_web(seed): # returns index, graph of outlinks
     tocrawl = [seed]
     crawled = []
-    index={}
-    while tocrawl:
+    graph = {}  # <url>:[list of pages it links to]
+    index = {} 
+    while tocrawl: 
         page = tocrawl.pop()
-        if page not in crawled and len(crawled)<max_pages:
-            content=get_page(page)
+        if page not in crawled:
+            content = get_page(page)
             add_page_to_index(index, page, content)
-            union(tocrawl, get_all_links(content))
+            outlinks = get_all_links(content)
+            graph[page] =outlinks
+            union(tocrawl, outlinks)
             crawled.append(page)
-        
-    return crawled
+    return index, graph
 
 def add_to_index(index, keyword, url):
    if keyword in index:
